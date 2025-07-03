@@ -17,14 +17,19 @@ STATE_FILE = "last_versions.json"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")
 
+
 def get_last_versions():
-    try:
-        with open(STATE_FILE, "r") as f: return json.load(f)
-    except FileNotFoundError:
-        return {}
+    # NEW: Ensure the state file exists on the first run
+    if not os.path.exists(STATE_FILE):
+        with open(STATE_FILE, 'w') as f:
+            json.dump({}, f)
+    
+    with open(STATE_FILE, "r") as f:
+        return json.load(f)
 
 def save_last_versions(versions):
-    with open(STATE_FILE, "w") as f: json.dump(versions, f, indent=4)
+    with open(STATE_FILE, "w") as f:
+        json.dump(versions, f, indent=4)
 
 def send_telegram_message(message):
     if not BOT_TOKEN or not CHANNEL_ID:
@@ -43,7 +48,6 @@ def send_telegram_message(message):
 def check_for_updates():
     print("شروع بررسی برای نسخه‌های جدید...")
     last_versions = get_last_versions()
-    new_versions_found = False
     updated_apps_messages = []
 
     for app_name, repo_path in REPOS_TO_CHECK.items():
@@ -56,8 +60,7 @@ def check_for_updates():
 
             if last_versions.get(repo_path) != latest_version_id:
                 print(f"نسخه جدیدی برای {app_name} یافت شد: {release_data['tag_name']}")
-                new_versions_found = True
-
+                
                 links_text = ""
                 instructions_text = ""
 
@@ -95,10 +98,11 @@ def check_for_updates():
                 )
                 updated_apps_messages.append(message_part)
                 last_versions[repo_path] = latest_version_id
-
+        
         except requests.RequestException as e:
             print(f"خطا در بررسی {app_name}: {e}")
 
+    # فقط در صورتی که آپدیتی پیدا و با موفقیت ارسال شد، فایل را ذخیره کن
     if updated_apps_messages:
         final_message = "📢 **آپدیت جدید برای نرم‌افزارها منتشر شد!**\n\n"
         final_message += "\n\n---\n\n".join(updated_apps_messages)
