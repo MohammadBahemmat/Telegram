@@ -5,7 +5,8 @@ import time
 
 # --- تنظیمات اصلی ---
 REPOS_TO_CHECK = {
-    "v2rayN (Windows)": "2dust/v2rayN-Core",
+    # FIX: Corrected the repository path for v2rayN
+    "v2rayN (Windows)": "2dust/v2rayN",
     "v2rayNG (Android)": "2dust/v2rayNG",
     "V2RayX (macOS)": "Cenmrev/V2RayX"
 }
@@ -19,11 +20,9 @@ CHANNEL_ID = os.getenv("CHANNEL_ID")
 
 
 def get_last_versions():
-    # NEW: Ensure the state file exists on the first run
     if not os.path.exists(STATE_FILE):
         with open(STATE_FILE, 'w') as f:
             json.dump({}, f)
-    
     with open(STATE_FILE, "r") as f:
         return json.load(f)
 
@@ -36,7 +35,8 @@ def send_telegram_message(message):
         print("خطا: توکن ربات یا شناسه کانال تنظیم نشده است.")
         return False
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHANNEL_ID, "text": message, "parse_mode": "Markdown", "disable_web_page_preview": True}
+    # FIX: Switched to HTML parse mode for better reliability
+    payload = {"chat_id": CHANNEL_ID, "text": message, "parse_mode": "HTML", "disable_web_page_preview": True}
     response = requests.post(url, json=payload)
     if response.status_code == 200:
         print(f"پیام با موفقیت به کانال {CHANNEL_ID} ارسال شد.")
@@ -65,35 +65,31 @@ def check_for_updates():
                 instructions_text = ""
 
                 if "Windows" in app_name:
-                    link_64 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "With-Core.zip" in asset["name"] and "x64" in asset["name"]), None)
-                    link_32 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "With-Core.zip" in asset["name"] and "x86" in asset["name"]), None)
-                    if link_64: links_text += f"\n- [دانلود نسخه 64 بیتی]({link_64}) (پیشنهادی)"
-                    if link_32: links_text += f"\n- [دانلود نسخه 32 بیتی]({link_32}) (سیستم‌های قدیمی)"
+                    # FIX: Updated logic for the new v2rayN repo asset names
+                    link_64 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN.zip" in asset["name"]), None)
+                    if link_64: links_text += f'\n- <a href="{link_64}">دانلود نسخه کامل (64 و 32 بیتی)</a>'
                     instructions_text = (
-                        "\n\n*💡 نکته برای آپدیت آسان:*\n"
-                        "همچنین می‌توانید از داخل برنامه آپدیت کنید:\n"
-                        "۱. از منو `Check for updates` را انتخاب کنید.\n"
-                        "۲. تیک گزینه‌های `v2rayN-Core`, `Xray-Core` و `Geo-files` را فعال نگه دارید.\n"
-                        "۳. روی دکمه `Update` کلیک کنید."
+                        "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
+                        "از منوی برنامه <i>Check for updates</i> را انتخاب کرده، تیک همه گزینه‌ها را فعال نگه دارید و روی <i>Update</i> کلیک کنید."
                     )
                 elif "Android" in app_name:
                     link_arm64 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "arm64-v8a" in asset["name"]), None)
                     link_arm32 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "armeabi-v7a" in asset["name"]), None)
-                    if link_arm64: links_text += f"\n- [دانلود نسخه 64 بیتی]({link_arm64}) (اکثر گوشی‌ها)"
-                    if link_arm32: links_text += f"\n- [دانلود نسخه 32 بیتی]({link_arm32}) (گوشی‌های قدیمی)"
+                    if link_arm64: links_text += f'\n- <a href="{link_arm64}">دانلود نسخه 64 بیتی (اکثر گوشی‌ها)</a>'
+                    if link_arm32: links_text += f'\n- <a href="{link_arm32}">دانلود نسخه 32 بیتی (گوشی‌های قدیمی)</a>'
                 elif "macOS" in app_name:
                     link_dmg = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".dmg" in asset["name"]), None)
-                    if link_dmg: links_text += f"\n- [دانلود نسخه مک]({link_dmg})"
+                    if link_dmg: links_text += f'\n- <a href="{link_dmg}">دانلود نسخه مک</a>'
                     instructions_text = (
-                        "\n\n*💡 نکته برای آپدیت آسان:*\n"
-                        "از منوی بالای صفحه روی `V2RayX` و سپس `Check for Updates...` کلیک کنید."
+                        "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
+                        "از منوی بالای صفحه روی <i>V2RayX</i> و سپس <i>Check for Updates...</i> کلیک کنید."
                     )
 
                 if not links_text: continue
                 message_part = (
-                    f"📱 **{app_name}**\n"
-                    f"🔖 **نسخه:** `{release_data['tag_name']}`\n"
-                    f"**لینک‌های دانلود:**{links_text}"
+                    f"📱 <b>{app_name}</b>\n"
+                    f"🔖 <b>نسخه:</b> <code>{release_data['tag_name']}</code>\n"
+                    f"<b>لینک‌های دانلود:</b>{links_text}"
                     f"{instructions_text}"
                 )
                 updated_apps_messages.append(message_part)
@@ -102,17 +98,16 @@ def check_for_updates():
         except requests.RequestException as e:
             print(f"خطا در بررسی {app_name}: {e}")
 
-    # فقط در صورتی که آپدیتی پیدا و با موفقیت ارسال شد، فایل را ذخیره کن
     if updated_apps_messages:
-        final_message = "📢 **آپدیت جدید برای نرم‌افزارها منتشر شد!**\n\n"
+        final_message = "📢 <b>آپدیت جدید برای نرم‌افزارها منتشر شد!</b>\n\n"
         final_message += "\n\n---\n\n".join(updated_apps_messages)
         final_message += f"\n\n🆔 @ACV_2ray"
         if send_telegram_message(final_message):
             save_last_versions(last_versions)
             time.sleep(5)
-            ios_message = "🍏 **یادآوری برای کاربران آیفون (iOS)**\n\nبرای دریافت آخرین نسخه، همیشه می‌توانید از لینک‌های رسمی اپ استور زیر استفاده کنید:\n\n"
+            ios_message = "🍏 <b>یادآوری برای کاربران آیفون (iOS)</b>\n\nبرای دریافت آخرین نسخه، همیشه می‌توانید از لینک‌های رسمی اپ استور زیر استفاده کنید:\n\n"
             for name, link in IOS_APPS.items():
-                ios_message += f"• [{name}]({link})\n"
+                ios_message += f'• <a href="{link}">{name}</a>\n'
             ios_message += f"\n🆔 @ACV_2ray"
             send_telegram_message(ios_message)
     else:
