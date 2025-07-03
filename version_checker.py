@@ -48,6 +48,15 @@ def check_for_updates():
     last_versions = get_last_versions()
     updated_apps_messages = []
 
+    # NEW: The new instruction text provided by the user
+    new_instructions = (
+        "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
+        "در برنامه، از منوی بالا روی <i>Check for updates</i> کلیک کنید. "
+        "همه مقادیر را فعال بگذراید و بخش <i>Check for pre-release update</i> را خاموش کنید "
+        "و در پایان روی <i>Check update</i> کلیک کنید. برنامه آپدیت را انجام داده و در نهایت "
+        "یک دور به طور کامل (از تسک منیجر و تسک بار) ببندید و مجدد باز کنید."
+    )
+
     for app_name, repo_path in REPOS_TO_CHECK.items():
         try:
             url = f"https://api.github.com/repos/{repo_path}/releases/latest"
@@ -61,43 +70,34 @@ def check_for_updates():
                 
                 links_text = ""
                 instructions_text = ""
+                emoji = "📱" # Default emoji
 
-                # --- منطق هوشمند نهایی برای پیدا کردن فایل‌ها ---
                 if "Windows" in app_name:
-                    # FIX: The v2rayN repo now often bundles assets differently. Look for the main zip.
-                    link_main = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN-With-Core.zip" in asset["name"]), None)
-                    if not link_main: # Fallback for older naming
-                         link_main = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN.zip" in asset["name"]), None)
-                    
+                    emoji = "💻"
+                    # FIX: Updated logic for v2rayN to find 'v2rayN-Core.zip'
+                    link_main = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN-Core.zip" in asset["name"]), None)
                     if link_main: links_text += f'\n- <a href="{link_main}">دانلود نسخه کامل ویندوز</a>'
-                    instructions_text = (
-                        "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
-                        "از منوی برنامه <i>Check for updates</i> را انتخاب کرده، تیک همه گزینه‌ها را فعال نگه دارید و روی <i>Update</i> کلیک کنید."
-                    )
+                    instructions_text = new_instructions
+                
                 elif "Android" in app_name:
+                    emoji = "📱"
                     link_arm64 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "arm64-v8a" in asset["name"]), None)
                     link_arm32 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "armeabi-v7a" in asset["name"]), None)
                     if link_arm64: links_text += f'\n- <a href="{link_arm64}">دانلود نسخه 64 بیتی (اکثر گوشی‌ها)</a>'
                     if link_arm32: links_text += f'\n- <a href="{link_arm32}">دانلود نسخه 32 بیتی (گوشی‌های قدیمی)</a>'
+
                 elif "macOS" in app_name:
-                    # FIX: V2RayX often uses .app.zip instead of .dmg
-                    link_mac = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".app.zip" in asset["name"]), None)
-                    if not link_mac: # Fallback for .dmg
-                         link_mac = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".dmg" in asset["name"]), None)
-                    
+                    emoji = "💻"
+                    link_mac = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".app.zip" in asset["name"] or ".dmg" in asset["name"]), None)
                     if link_mac: links_text += f'\n- <a href="{link_mac}">دانلود نسخه مک</a>'
-                    instructions_text = (
-                        "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
-                        "از منوی بالای صفحه روی <i>V2RayX</i> و سپس <i>Check for Updates...</i> کلیک کنید."
-                    )
-                # -----------------------------------------
+                    instructions_text = new_instructions
 
                 if not links_text: 
-                    print(f"هشدار: لینک دانلود مناسبی برای {app_name} پیدا نشد. از این مرحله عبور می‌کنیم.")
+                    print(f"هشدار: لینک دانلود مناسبی برای {app_name} پیدا نشد.")
                     continue
 
                 message_part = (
-                    f"📱 <b>{app_name}</b>\n"
+                    f"{emoji} <b>{app_name}</b>\n"
                     f"🔖 <b>نسخه:</b> <code>{release_data['tag_name']}</code>\n"
                     f"<b>لینک‌های دانلود:</b>{links_text}"
                     f"{instructions_text}"
@@ -109,18 +109,22 @@ def check_for_updates():
             print(f"خطا در بررسی {app_name}: {e}")
 
     if updated_apps_messages:
+        # NEW: iOS reminder is now part of the main message
+        ios_reminder_text = (
+            "🍏 <b>یادآوری برای کاربران آیفون (iOS)</b>\n"
+            "برای دریافت آخرین نسخه، همیشه می‌توانید از لینک‌های رسمی اپ استور زیر استفاده کنید:\n\n"
+        )
+        for name, link in IOS_APPS.items():
+            ios_reminder_text += f'• <a href="{link}">{name}</a>\n'
+
+        # Build the final single message
         final_message = "📢 <b>آپدیت جدید برای نرم‌افزارها منتشر شد!</b>\n\n"
         final_message += "\n\n---\n\n".join(updated_apps_messages)
-        final_message += f"\n\n🆔 @ACV_2ray"
+        final_message += "\n\n---\n\n" + ios_reminder_text # Add iOS part
+        final_message += f"\n🆔 @ACV_2ray"
+
         if send_telegram_message(final_message):
             save_last_versions(last_versions)
-            time.sleep(5)
-            # Send iOS reminder only if there was at least one other update
-            ios_message = "🍏 <b>یادآوری برای کاربران آیفون (iOS)</b>\n\nبرای دریافت آخرین نسخه، همیشه می‌توانید از لینک‌های رسمی اپ استور زیر استفاده کنید:\n\n"
-            for name, link in IOS_APPS.items():
-                ios_message += f'• <a href="{link}">{name}</a>\n'
-            ios_message += f"\n🆔 @ACV_2ray"
-            send_telegram_message(ios_message)
     else:
         print("هیچ نسخه جدیدی یافت نشد.")
 
