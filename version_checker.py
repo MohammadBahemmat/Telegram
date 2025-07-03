@@ -5,7 +5,6 @@ import time
 
 # --- تنظیمات اصلی ---
 REPOS_TO_CHECK = {
-    # FIX: Corrected the repository path for v2rayN
     "v2rayN (Windows)": "2dust/v2rayN",
     "v2rayNG (Android)": "2dust/v2rayNG",
     "V2RayX (macOS)": "Cenmrev/V2RayX"
@@ -35,7 +34,6 @@ def send_telegram_message(message):
         print("خطا: توکن ربات یا شناسه کانال تنظیم نشده است.")
         return False
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    # FIX: Switched to HTML parse mode for better reliability
     payload = {"chat_id": CHANNEL_ID, "text": message, "parse_mode": "HTML", "disable_web_page_preview": True}
     response = requests.post(url, json=payload)
     if response.status_code == 200:
@@ -64,10 +62,14 @@ def check_for_updates():
                 links_text = ""
                 instructions_text = ""
 
+                # --- منطق هوشمند نهایی برای پیدا کردن فایل‌ها ---
                 if "Windows" in app_name:
-                    # FIX: Updated logic for the new v2rayN repo asset names
-                    link_64 = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN.zip" in asset["name"]), None)
-                    if link_64: links_text += f'\n- <a href="{link_64}">دانلود نسخه کامل (64 و 32 بیتی)</a>'
+                    # FIX: The v2rayN repo now often bundles assets differently. Look for the main zip.
+                    link_main = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN-With-Core.zip" in asset["name"]), None)
+                    if not link_main: # Fallback for older naming
+                         link_main = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if "v2rayN.zip" in asset["name"]), None)
+                    
+                    if link_main: links_text += f'\n- <a href="{link_main}">دانلود نسخه کامل ویندوز</a>'
                     instructions_text = (
                         "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
                         "از منوی برنامه <i>Check for updates</i> را انتخاب کرده، تیک همه گزینه‌ها را فعال نگه دارید و روی <i>Update</i> کلیک کنید."
@@ -78,14 +80,22 @@ def check_for_updates():
                     if link_arm64: links_text += f'\n- <a href="{link_arm64}">دانلود نسخه 64 بیتی (اکثر گوشی‌ها)</a>'
                     if link_arm32: links_text += f'\n- <a href="{link_arm32}">دانلود نسخه 32 بیتی (گوشی‌های قدیمی)</a>'
                 elif "macOS" in app_name:
-                    link_dmg = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".dmg" in asset["name"]), None)
-                    if link_dmg: links_text += f'\n- <a href="{link_dmg}">دانلود نسخه مک</a>'
+                    # FIX: V2RayX often uses .app.zip instead of .dmg
+                    link_mac = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".app.zip" in asset["name"]), None)
+                    if not link_mac: # Fallback for .dmg
+                         link_mac = next((asset["browser_download_url"] for asset in release_data.get("assets", []) if ".dmg" in asset["name"]), None)
+                    
+                    if link_mac: links_text += f'\n- <a href="{link_mac}">دانلود نسخه مک</a>'
                     instructions_text = (
                         "\n\n<b>💡 نکته برای آپدیت آسان:</b>\n"
                         "از منوی بالای صفحه روی <i>V2RayX</i> و سپس <i>Check for Updates...</i> کلیک کنید."
                     )
+                # -----------------------------------------
 
-                if not links_text: continue
+                if not links_text: 
+                    print(f"هشدار: لینک دانلود مناسبی برای {app_name} پیدا نشد. از این مرحله عبور می‌کنیم.")
+                    continue
+
                 message_part = (
                     f"📱 <b>{app_name}</b>\n"
                     f"🔖 <b>نسخه:</b> <code>{release_data['tag_name']}</code>\n"
@@ -105,6 +115,7 @@ def check_for_updates():
         if send_telegram_message(final_message):
             save_last_versions(last_versions)
             time.sleep(5)
+            # Send iOS reminder only if there was at least one other update
             ios_message = "🍏 <b>یادآوری برای کاربران آیفون (iOS)</b>\n\nبرای دریافت آخرین نسخه، همیشه می‌توانید از لینک‌های رسمی اپ استور زیر استفاده کنید:\n\n"
             for name, link in IOS_APPS.items():
                 ios_message += f'• <a href="{link}">{name}</a>\n'
