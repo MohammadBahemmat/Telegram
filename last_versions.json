@@ -1,5 +1,4 @@
 {
-    "2dust/v2rayN": "test_windows",
-    "2dust/v2rayNG": 226353372,
-    "Cenmrev/V2RayX": 15549629
+  "2dust/v2rayN": "test_desktop",
+  "2dust/v2rayNG": "test_android"
 }
