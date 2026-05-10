@@ -3,14 +3,19 @@
 <a href="https://github.com/MohammadBahemmat/Telegram/blob/main/README.md">
     <img src="https://img.shields.io/badge/Read_in-Farsi-FF5722?style=for-the-badge&logo=readthedocs" alt="Read in Farsi">
 </a>
+</div>
 
-<img src="https://github.com/MohammadBahemmat/Telegram/actions/workflows/main.yml/badge.svg" alt="Workflow Status">
+<body>
+<div class="container">
+<div align="center">
 
 <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
 <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=open-source-initiative" alt="License">
 <img src="https://img.shields.io/badge/Platform-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions" alt="GitHub Actions">
 
 </div>
+
+<img src="https://github.com/MohammadBahemmat/Telegram/actions/workflows/main.yml/badge.svg" alt="Workflow Status">
 
 <hr>
 
