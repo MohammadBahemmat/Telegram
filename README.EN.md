@@ -87,8 +87,8 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
 ├── last_versions.json                # State file for tracking version IDs
 ├── requirements.txt                  # Python dependencies
 ├── .gitignore                        # Ignored files
-├── README.md                         # English documentation
-└── README.fa.md                      # Persian documentation
+├── README.EN.md                      # English documentation
+└── README.md                         # Persian documentation
 </pre>
 
 <hr>
