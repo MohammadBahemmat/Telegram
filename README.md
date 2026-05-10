@@ -87,8 +87,8 @@
 ├── last_versions.json                # فایل وضعیت برای ذخیره شناسه نسخه‌ها
 ├── requirements.txt                  # نیازمندی‌های پایتون
 ├── .gitignore                        # فایل‌های نادیده گرفته‌شده
-├── README.md                         # مستندات انگلیسی
-└── README.fa.md                      # مستندات فارسی
+├── README.EN.md                      # مستندات انگلیسی
+└── README.md                         # مستندات فارسی
 </pre>
 
 <hr>
