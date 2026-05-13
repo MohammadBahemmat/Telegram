@@ -17,7 +17,7 @@
 
 <img src="https://github.com/MohammadBahemmat/Telegram/actions/workflows/main.yml/badge.svg" alt="Workflow Status">
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h1>🔄 بررسی‌کننده آپدیت نرم‌افزارهای V2ray</h1>
 
@@ -26,7 +26,7 @@
 این پروژه با استفاده از <strong>GitHub Actions</strong> به‌طور خودکار هر ساعت آخرین نسخه‌های منتشر شده از نرم‌افزارهای V2Ray را بررسی می‌کند و در صورت وجود آپدیت جدید، پیامی حاوی لینک دانلود و راهنمای نصب به <strong>کانال تلگرام</strong> شما ارسال می‌کند.
 </p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🚀 ویژگی‌ها</h2>
 <table>
@@ -41,13 +41,13 @@
 </tbody>
 </table>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📢 کانال تلگرام ما</h2>
 <p>برای دریافت آخرین اخبار و آپدیت‌های V2ray، حتماً عضو کانال زیر شوید:</p>
 <p>🔗 <strong><a href="https://t.me/ACV_2ray" target="_blank">@ACV_2ray</a></strong></p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📦 نیازمندی‌ها</h2>
 <ul>
@@ -59,7 +59,7 @@
     <li>شناسه عددی کانال تلگرام (مثلاً <code>100123456789@-</code>)</li>
 </ul>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>⚙️ راه‌اندازی سریع (برای توسعه‌دهندگان)</h2>
 <ol>
@@ -75,7 +75,7 @@
     <li>Workflow به صورت خودکار هر یک ساعت اجرا می‌شود</li>
 </ol>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🗂️ ساختار پروژه</h2>
 <pre class="ltr-block">
@@ -91,7 +91,7 @@
 └── README.md                         # مستندات فارسی
 </pre>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🛠️ سفارشی‌سازی</h2>
 <ul>
@@ -100,7 +100,7 @@
     <li>برای <strong>تغییر متن پیام</strong>، رشته‌های قالب پیام در <code>version_checker.py</code> را ویرایش کنید</li>
 </ul>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>❗ خطاهای رایج و راه‌حل</h2>
 <details>
@@ -115,12 +115,12 @@
 </ul>
 </details>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🙏 تقدیر و تشکر</h2>
 <p>از تمام کاربران و توسعه‌دهندگانی که با استفاده از این ابزار به گسترش V2ray کمک می‌کنند سپاسگزاریم. لطفاً با ارسال نظرات و پیشنهادات خود در بخش Issues یا از طریق کانال تلگرام ما را یاری کنید.</p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📄 مجوز</h2>
 <p>این پروژه تحت مجوز <strong>MIT</strong> منتشر شده است. استفاده، تغییر و توزیع آن آزاد است.</p>
