@@ -17,7 +17,7 @@
 
 <img src="https://github.com/MohammadBahemmat/Telegram/actions/workflows/main.yml/badge.svg" alt="Workflow Status">
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h1>🔄 V2ray Apps Update Checker</h1>
 
@@ -26,7 +26,7 @@
 This project uses <strong>GitHub Actions</strong> to automatically check the latest releases of V2Ray software every hour and sends a message containing download links and installation guides to your <strong>Telegram channel</strong> whenever a new update is found.
 </p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🚀 Features</h2>
 <table>
@@ -41,13 +41,13 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
 </tbody>
 </table>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📢 Our Telegram Channel</h2>
 <p>Join our Telegram channel for the latest V2Ray updates and tutorials:</p>
 <p>🔗 <strong><a href="https://t.me/ACV_2ray" target="_blank">@ACV_2ray</a></strong></p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📦 Requirements</h2>
 <ul>
@@ -59,7 +59,7 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
     <li>A Telegram channel ID (e.g., <code>@-100123456789</code>)</li>
 </ul>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>⚙️ Quick Setup (for Developers)</h2>
 <ol>
@@ -75,7 +75,7 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
     <li>The workflow runs automatically every hour — no further setup needed</li>
 </ol>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🗂️ Project Structure</h2>
 <pre class="ltr-block">
@@ -91,7 +91,7 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
 └── README.md                         # Persian documentation
 </pre>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🛠️ Customization</h2>
 <ul>
@@ -100,7 +100,7 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
     <li>To <strong>customize the message text</strong>, edit the message template strings in <code>version_checker.py</code></li>
 </ul>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>❗ Common Errors & Solutions</h2>
 <details>
@@ -115,12 +115,12 @@ This project uses <strong>GitHub Actions</strong> to automatically check the lat
 </ul>
 </details>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>🙏 Acknowledgements</h2>
 <p>Thanks to all users and developers who help spread V2Ray tools. Feel free to submit suggestions or bug reports via <strong>Issues</strong> or through our Telegram channel.</p>
 
-<hr>
+<img src="line.gif" alt="separator" style="display: block; margin: 30px auto;" />
 
 <h2>📄 License</h2>
 <p>This project is released under the <strong>MIT</strong> license. Use, modification, and distribution are free.</p>
