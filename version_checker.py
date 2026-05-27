@@ -105,27 +105,40 @@ def check_for_updates():
 
             # --- Desktop (v2rayN) ---
             if "Desktop" in app_name:
-                win_link_sc = find_asset_url(
-                    assets, ["windows-64-selfcontained.zip"]
-                )
-                win_link_64 = find_asset_url(assets, ["windows-64.zip"])
-                mac_arm_link = find_asset_url(
-                    assets, ["macos-arm64.dmg", "macos-arm64.zip"]
-                )
-                mac_intel_link = find_asset_url(
-                    assets, ["macos-64.dmg", "macos-64.zip"]
-                )
+                # ویندوز: نسخه desktop (self-contained) اولویت دارد
+                win_link_desktop_64 = find_asset_url(assets, ["windows-64-desktop.zip"])
+                win_link_64 = find_asset_url(assets, ["windows-64.zip"]) if not win_link_desktop_64 else None
+                win_link_desktop_arm = find_asset_url(assets, ["windows-arm64-desktop.zip"])
+                win_link_arm = find_asset_url(assets, ["windows-arm64.zip"]) if not win_link_desktop_arm else None
+
+                # مک: نسخه zip (قابل حمل) اولویت دارد، dmg به‌عنوان جایگزین
+                mac_arm_link = find_asset_url(assets, ["macos-arm64.zip", "macos-arm64.dmg"])
+                mac_intel_link = find_asset_url(assets, ["macos-64.zip", "macos-64.dmg"])
+
+                # لینوکس: نسخه zip (قابل حمل) برای معماری‌های اصلی
+                linux_x64_link = find_asset_url(assets, ["linux-64.zip"])
+                linux_arm64_link = find_asset_url(assets, ["linux-arm64.zip"])
 
                 desktop_links = ""
-                if win_link_sc:
-                    desktop_links += f'\n- <a href="{win_link_sc}">💻 نسخه ویندوز ۶۴ بیتی Self‑Contained</a> (پیشنهادی)'
+                if win_link_desktop_64:
+                    desktop_links += f'\n- <a href="{win_link_desktop_64}">💻 ویندوز ۶۴ بیتی (Desktop - پیشنهادی)</a>'
                 elif win_link_64:
-                    desktop_links += f'\n- <a href="{win_link_64}">💻 نسخه ویندوز ۶۴ بیتی</a>'
+                    desktop_links += f'\n- <a href="{win_link_64}">💻 ویندوز ۶۴ بیتی</a>'
+
+                if win_link_desktop_arm:
+                    desktop_links += f'\n- <a href="{win_link_desktop_arm}">💻 ویندوز ARM64 (Desktop - پیشنهادی)</a>'
+                elif win_link_arm:
+                    desktop_links += f'\n- <a href="{win_link_arm}">💻 ویندوز ARM64</a>'
 
                 if mac_arm_link:
-                    desktop_links += f'\n- <a href="{mac_arm_link}">🍎 نسخه مک (Apple Silicon)</a>'
+                    desktop_links += f'\n- <a href="{mac_arm_link}">🍎 مک (Apple Silicon)</a>'
                 if mac_intel_link:
-                    desktop_links += f'\n- <a href="{mac_intel_link}">🍎 نسخه مک (Intel)</a>'
+                    desktop_links += f'\n- <a href="{mac_intel_link}">🍎 مک (Intel)</a>'
+
+                if linux_x64_link:
+                    desktop_links += f'\n- <a href="{linux_x64_link}">🐧 لینوکس ۶۴ بیتی (x64)</a>'
+                if linux_arm64_link:
+                    desktop_links += f'\n- <a href="{linux_arm64_link}">🐧 لینوکس ARM64</a>'
 
                 if desktop_links:
                     message_part += f"<b>{app_name}</b> | نسخه <code>{release_data['tag_name']}</code>"
@@ -134,7 +147,9 @@ def check_for_updates():
 
             # --- Android (v2rayNG) ---
             elif "Android" in app_name:
-                link_arm64 = find_asset_url(assets, ["arm64-v8a.apk"])
+                # فیلتر دارایی‌هایی که "fdroid" در نام ندارند
+                non_fdroid_assets = [a for a in assets if "fdroid" not in a["name"].lower()]
+                link_arm64 = find_asset_url(non_fdroid_assets, ["arm64-v8a.apk"])
                 if link_arm64:
                     message_part += f"📱 <b>{app_name}</b> | نسخه <code>{release_data['tag_name']}</code>\n"
                     message_part += f'- <a href="{link_arm64}">دانلود نسخه ۶۴ بیتی (v8a)</a>'
